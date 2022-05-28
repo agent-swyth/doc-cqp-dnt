@@ -1,6 +1,6 @@
 site_name: CQP DNT Documentation
-repo_url: https://github.com/agent-swyth/doc-cqp-dnt
-repo_name: agent-swyth/doc-cqp-dnt
+repo_url: https://github.com/agent-swyth/doc-cqp-dnt/
+repo_name: agent-swyth/doc-cqp-dnt/
 
 theme:
   name: material
