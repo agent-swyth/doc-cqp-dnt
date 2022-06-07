@@ -8,7 +8,19 @@ theme:
     logo: material/library
     repo: fontawesome/brands/github-alt
   palette:
-      primary: teal
+    - scheme: default
+      primary: deep purple
+      toggle:
+        icon: material/weather-night
+        name: switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+      
+    
+
   features:
     - navigation.instant
     - navigation.tracking
