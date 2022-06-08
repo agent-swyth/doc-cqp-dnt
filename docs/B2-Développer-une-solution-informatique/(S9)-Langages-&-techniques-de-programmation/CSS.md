@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Apprendre CSS
 
 > Ce support de cours (et mémo) est inspiré directement du cours "Learn CSS" de [Codecademy](https://www.codecademy.com/learn/learn-css)
@@ -7,7 +12,7 @@
 ### **Anatomie du CSS** 
 Ici sont définis les termes principaux qui nous permettent de comprendre comment une règle CSS est formulée :
 
-![CSS Anatomy](images/css-anatomy.png)
+![CSS Anatomy](../images/css-anatomy.png)
 
 - Un **sélecteur** permet de cibler l'élément qu'on souhaite styliser
 - Le **bloc de déclaration** se site entre les accolades `{}` et contient les déclarations CSS
@@ -202,20 +207,128 @@ Lorsque nous définissons une pollièce de caractères sur une page web, plusieu
 
 ### **Taille de police**
 
-Selon les besoins, plusieurs section d'une page peuvent 
+Selon les besoins, plusieurs sections d'une page peuvent ne pas avoir la même taille de police.
+
+Pour modifier la taille d'un texte, nous avons la propriété [`font-size`](https://developer.mozilla.org/fr/docs/Web/CSS/font-size)
+
+```css
+p {
+  font-size: 18px;
+}
+```
+
+### **Poids de la police**
+
+La propriété [`font-weight`](https://developer.mozilla.org/fr/docs/Web/CSS/font-weight) contrôle le degré de gras ou de finesse du texte
+
+```css
+p {
+  font-weight: bold;
+}
+```
+
+### **Alignement de texte**
+
+Par défaut, le texte apparaît sur le côté gauche du conteneur dans lequel il réside.
+
+Pour l'aligner, nous pouvons utiliser la propriété [`text-align`](https://developer.mozilla.org/fr/docs/Web/CSS/text-align)
+
+```css
+h1 {
+  text-align: right;
+}
+```
+
+### **Couleurs** et **couleurs de fond**
+
+`color` permet de définir la couleur de texte et `background-color` celle derrière le texte
+
+```css
+p {
+  color:blue;
+  background-color: burlywood;
+}
+```
+
+### Opacité
+
+L'opacité est la mesure de transparence, entre 0 et 1, d'un élément sélectionné : 
+
+```css 
+.overlay {
+  opacity: 0.5;
+}
+```
+
+### Image d'arrière plan 
+
+CSS permet de modifier l'image d'arrière plan d'un élément, en utilisant [`background-image`](https://developer.mozilla.org/fr/docs/Web/CSS/background-image)
 
 
 
+### L'exception [`!Important`](https://developer.mozilla.org/fr/docs/Web/CSS/Specificity#lexception_!important)
+
+L'exception `!Important` peut être utilisé dans des déclarations pour réécrire n'importe quel style, quoi que soit sa spécificité. C'est pourquoi, il ne devrait jamais être utilisé.
+
+```css 
+p {
+  color: blue !important;
+}
+ 
+.main p {
+  color: red;
+}
+```
 
 
 
+## [**Le 'Box Model'**](https://developer.mozilla.org/fr/docs/Learn/CSS/Building_blocks/The_box_model)
+
+![Box model](../images/box-model.png)
+
+### **`height`** et **`width`**
+
+> Le contenu d'un élément a deux dimensions : une hauteur et une largeur. Par défaut, les dimensions d'une boîte HTML sont définies pour contenir le contenu brut de la boîte.
+
+```css 
+p {
+  height: 80px;
+  width: 240px;
+}
+```
+
+### **`border`**
+
+Une bordure est une ligne qui entoure un élément. Ils peuvent être paramétrés par `width`, `style` et `color` : 
+
+```css 
+p {
+  border: 3px solid coral;
+}
+```
+
+### **`border-radius`**
+
+```css 
+p {
+  border-radius: 15px;
+}
+```
+
+### **`padding`**
+
+L'espace entre la 'box' et les bordures de la boxe est le ``padding``
 
 
+-  padding-top
+-  padding-right
+-  padding-bottom
+-  padding-left
 
 
+### **`margin`**
 
-
-
+### **`overflow`**
 
 
 ## Affichage et Positionnement
