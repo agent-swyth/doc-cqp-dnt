@@ -1,0 +1,2921 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../../B4-Maintenir-et-faire-%C3%A9voluer-l%27application/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.21">
+    
+    
+      
+        <title>Strategie de CI CD sur Kubernetes - CQP DNT Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.66ac8b77.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#strategie-de-cicd-sur-kubernetes-cellenza-blog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CQP DNT Documentation" class="md-header__button md-logo" aria-label="CQP DNT Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CQP DNT Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Strategie de CI CD sur Kubernetes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/agent-swyth/doc-cqp-dnt/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    agent-swyth/doc-cqp-dnt/
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../B1-Analyser-et-Concevoir/" class="md-tabs__link">
+          
+  
+    
+  
+  B1 Analyser et Concevoir
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../B2-D%C3%A9velopper-une-solution-informatique/" class="md-tabs__link">
+          
+  
+    
+  
+  B2 Développer une solution informatique
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  B3 Mettre en oeuvre l'intégration continue
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../B4-Maintenir-et-faire-%C3%A9voluer-l%27application/" class="md-tabs__link">
+          
+  
+    
+  
+  B4 Maintenir et faire évoluer l'application
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../HB-Gestion-de-projet/" class="md-tabs__link">
+          
+  
+    
+  
+  HB Gestion de projet
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CQP DNT Documentation" class="md-nav__button md-logo" aria-label="CQP DNT Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    CQP DNT Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/agent-swyth/doc-cqp-dnt/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    agent-swyth/doc-cqp-dnt/
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B1-Analyser-et-Concevoir/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    B1 Analyser et Concevoir
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            B1 Analyser et Concevoir
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B1-Analyser-et-Concevoir/U1-Architecture-des-SI/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    U1 Architecture des SI
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            U1 Architecture des SI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U1-Architecture-des-SI/%28S1%29-Architecture-mat%C3%A9rielle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (S1) Architecture matérielle
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U1-Architecture-des-SI/%28S2%29-Architecture-r%C3%A9seau/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (S2) Architecture réseau
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U1-Architecture-des-SI/%28S3%29-Architecture-logicielle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture logicielle (S3)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U1-Architecture-des-SI/%28S4%29-Analyse-du-SI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Analyse du SI (S4)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B1-Analyser-et-Concevoir/U2-M%C3%A9thodes-de-d%C3%A9veloppement/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    U2 Méthodes de développement
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            U2 Méthodes de développement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U2-M%C3%A9thodes-de-d%C3%A9veloppement/%28S5%29-Recueil-et-Analyse-des-besoins/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (S5) Recueil et Analyse des besoins
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U2-M%C3%A9thodes-de-d%C3%A9veloppement/%28S6%29-Interp%C3%A9tation-d%27un-cahier-des-charges/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (S6) Interpétation d'un cahier des charges
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U2-M%C3%A9thodes-de-d%C3%A9veloppement/%28S7%29-Conception-et-Mod%C3%A9lisation-de-donn%C3%A9es/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modélisation Orientée Objet (UML)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B1-Analyser-et-Concevoir/U2-M%C3%A9thodes-de-d%C3%A9veloppement/%28S8%29-Conception-du-plan-de-d%C3%A9veloppement/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    (S8) Conception du plan de développement
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    B2 Développer une solution informatique
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            B2 Développer une solution informatique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S10%29-Utilisation-d%27API-et-Framework/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    (S10) Utilisation d'API et Framework
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            (S10) Utilisation d'API et Framework
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S10%29-Utilisation-d%27API-et-Framework/%5BBack-end%5D-NodeJS-Express/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Back end] NodeJS Express
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S10%29-Utilisation-d%27API-et-Framework/%5BFront-end%5D-Angular/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Front end] Angular
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S10%29-Utilisation-d%27API-et-Framework/%5BMobile%5D-Ionic-Framework/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Mobile] Ionic Framework
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S10%29-Utilisation-d%27API-et-Framework/%5BMobile%5D-Java-Android-Framework/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Mobile] Java Android Framework
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S11%29-Langages-et-techniques-de-requ%C3%AAte/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    (S11) Langages et techniques de requête
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            (S11) Langages et techniques de requête
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S11%29-Langages-et-techniques-de-requ%C3%AAte/SQL-et-NoSQL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL et NoSQL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S11%29-Langages-et-techniques-de-requ%C3%AAte/%5BBack-end%5D-NodeJS-Express/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Back end] NodeJS Express
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S12%29-M%C3%A9thodologie-de-tests/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    (S12) Méthodologie de tests
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            (S12) Méthodologie de tests
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S13%29-Test-Unitaire-et-de-Charge/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    (S13) Test Unitaire et de Charge
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            (S13) Test Unitaire et de Charge
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S14%29-Industrialisation-des-processus-de-test/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    (S14) Industrialisation des processus de test
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            (S14) Industrialisation des processus de test
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S14%29-Industrialisation-des-processus-de-test/Containerisation-avec-Docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Containerisation avec Docker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S14%29-Industrialisation-des-processus-de-test/Gestion-Versionning-avec-Git/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gestion Versionning avec Git
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    (S9) Langages & techniques de programmation
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            (S9) Langages & techniques de programmation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/Alghorithmique/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Alghorithmique
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/CSS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Apprendre CSS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/%5BApplicatif%5D-POO-Java/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Applicatif] POO Java
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/%5BMobile%5D-Dev-Natif-Ionic/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Mobile] Dev Natif Ionic
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/%5BWeb%5D-Bases-Javascript-et-Typescript/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Web] Bases Javascript et Typescript
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/%5BWeb%5D-Developpement-d%27API-REST/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Web] Developpement d'API REST
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/%5BWeb%5D-HTML-CSS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Web] HTML CSS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../B2-D%C3%A9velopper-une-solution-informatique/%28S9%29-Langages-%26-techniques-de-programmation/%5BWeb%5D-Interactions-Client-Serveur-HTTP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    [Web] Interactions Client Serveur HTTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    B3 Mettre en oeuvre l'intégration continue
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            B3 Mettre en oeuvre l'intégration continue
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Strategie de CI CD sur Kubernetes
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Strategie de CI CD sur Kubernetes
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-as-code-iac-creation-et-gestion-du-cluster-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure as Code (IaC) : création et gestion du cluster Kubernetes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure as Code (IaC) : création et gestion du cluster Kubernetes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lapproche-procedurale" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'approche procédurale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lapproche-declarative" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'approche déclarative
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="L'approche déclarative">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#les-solutions-pour-lapproche-declarative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les solutions pour l'approche déclarative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-repository-reflet-de-notre-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le repository, reflet de notre infrastructure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partir-dun-modele-pour-creer-dautres-environnements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Partir d'un modèle pour créer d'autres environnements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lapproche-gitops" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'approche GitOps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cote-applicatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      Côté applicatif
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Côté applicatif">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#la-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      La CI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La CI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#une-ci-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Une CI Standard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#les-images-de-conteneur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les images de conteneur
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les images de conteneur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segregation-des-environnements-de-production-et-de-developpement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ségrégation des environnements de production et de développement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porter-le-versionning-sur-vos-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      Porter le versionning sur vos branches
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#les-images-utilisees-sont-elles-securisees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les images utilisées sont-elles sécurisées ?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ne-pas-oublier-le-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ne pas oublier le monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      La CD
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La CD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comment-deployer-sur-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment déployer sur Kubernetes ?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ce-quil-ne-faut-pas-oublier-pour-vos-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qu'il ne faut pas oublier pour vos containers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ce qu'il ne faut pas oublier pour vos containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#limitation-cpu-memoire" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitation CPU / Mémoire
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#healthcheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      HealthCheck
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-de-deploiements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie de déploiements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stratégie de déploiements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategie-rolling-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie Rolling Update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-blue-green" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie Blue-Green
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-canary-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie Canary Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-dab-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie d'A/B Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-densemble-des-strategies-de-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vue d'ensemble des stratégies de déploiement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#industrialiser-ses-packages-avec-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Industrialiser ses packages avec Helm
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Industrialiser ses packages avec Helm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi Helm ?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comment-integrer-helm-dans-vos-pipelines-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment Intégrer Helm dans vos pipelines CI/CD ?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrer-la-securite-dans-vos-pipelines-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégrer la sécurité dans vos pipelines CI/CD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lessentiel-a-retenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'essentiel à retenir
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin-sur-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pour aller plus loin sur Kubernetes
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../B4-Maintenir-et-faire-%C3%A9voluer-l%27application/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    B4 Maintenir et faire évoluer l'application
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            B4 Maintenir et faire évoluer l'application
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../HB-Gestion-de-projet/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    HB Gestion de projet
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            HB Gestion de projet
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-as-code-iac-creation-et-gestion-du-cluster-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure as Code (IaC) : création et gestion du cluster Kubernetes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure as Code (IaC) : création et gestion du cluster Kubernetes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lapproche-procedurale" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'approche procédurale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lapproche-declarative" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'approche déclarative
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="L'approche déclarative">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#les-solutions-pour-lapproche-declarative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les solutions pour l'approche déclarative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-repository-reflet-de-notre-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Le repository, reflet de notre infrastructure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partir-dun-modele-pour-creer-dautres-environnements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Partir d'un modèle pour créer d'autres environnements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lapproche-gitops" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'approche GitOps
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cote-applicatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      Côté applicatif
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Côté applicatif">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#la-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      La CI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La CI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#une-ci-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Une CI Standard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#les-images-de-conteneur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les images de conteneur
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les images de conteneur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segregation-des-environnements-de-production-et-de-developpement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ségrégation des environnements de production et de développement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#porter-le-versionning-sur-vos-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      Porter le versionning sur vos branches
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#les-images-utilisees-sont-elles-securisees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Les images utilisées sont-elles sécurisées ?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ne-pas-oublier-le-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ne pas oublier le monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      La CD
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La CD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comment-deployer-sur-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment déployer sur Kubernetes ?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ce-quil-ne-faut-pas-oublier-pour-vos-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ce qu'il ne faut pas oublier pour vos containers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ce qu'il ne faut pas oublier pour vos containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#limitation-cpu-memoire" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitation CPU / Mémoire
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#healthcheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      HealthCheck
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-de-deploiements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie de déploiements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stratégie de déploiements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategie-rolling-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie Rolling Update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-blue-green" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie Blue-Green
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-canary-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie Canary Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategie-dab-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stratégie d'A/B Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-densemble-des-strategies-de-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vue d'ensemble des stratégies de déploiement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#industrialiser-ses-packages-avec-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Industrialiser ses packages avec Helm
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Industrialiser ses packages avec Helm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pourquoi Helm ?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comment-integrer-helm-dans-vos-pipelines-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comment Intégrer Helm dans vos pipelines CI/CD ?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrer-la-securite-dans-vos-pipelines-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégrer la sécurité dans vos pipelines CI/CD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lessentiel-a-retenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      L'essentiel à retenir
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin-sur-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pour aller plus loin sur Kubernetes
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<p><a href="https://blog.cellenza.com/cloud-2/strategie-de-ci-cd-sur-kubernetes/">blog.cellenza.com</a></p>
+<h1 id="strategie-de-cicd-sur-kubernetes-cellenza-blog">Stratégie de CI/CD sur Kubernetes - Cellenza Blog</h1>
+<p>A propos de l'auteur Mustapha Ferhaoui</p>
+<p>20-25 minutes</p>
+<hr />
+<p><strong>Article corédigé par Mustapha Ferhaoui et Jérôme Thin</strong></p>
+<p>Nous allons à présent aborder les notions d'usine logiciel au sein de l'écosystème Kubernetes. Mais avant de rentrer dans le vif du sujet, il est indispensable d'avoir quelques notions d'industrialisation sur les mises en pratique d'une bonne CI/CD pour booster votre productivité. Nous allons donc commencer par quelques définitions.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1.png"><img alt="Schéma des phases de stratégie CICD" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-300x169.png" /></a></p>
+<p>La <strong>CI</strong> désigne l'intégration continue, à savoir un processus d'automatisation pour les développeurs. Cette intégration continue consiste, pour les développeurs, à apporter régulièrement des modifications au code de leur application, à les tester, puis à les fusionner dans un référentiel partagé. Cette solution permet de fluidifier le processus de développement mais aussi d'éviter les régressions.</p>
+<p>La <strong>CD</strong> peut désigner la "distribution continue" ou le "déploiement continu", deux concepts très proches, parfois utilisés de façon interchangeable.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie.png"><img alt="CICD Intégration Déploiement livraison" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-300x68.png" /></a></p>
+<p>Ce qu'il faut retenir, c'est que :</p>
+<ul>
+<li>La CI permet d'automatiser les développements à des fins qualitatives, afin de produire des releases ;</li>
+<li>La CD vous permettra de déployer automatiquement vos releases sur vos environnements de test puis de production.</li>
+</ul>
+<p>C'est un bon moyen de <strong>booster votre productivité</strong>.</p>
+<p>Dans ce qui va suivre, nous allons évoquer certains points incontournables de la CI/CD pour Kubernetes :</p>
+<ul>
+<li>Comment <strong>créer et gérer ses clusters Kubernetes</strong> pour héberger ses applications ?</li>
+<li>Comment <strong>déployer ses applications</strong> sur Kubernetes ?</li>
+</ul>
+<h2 id="infrastructure-as-code-iac-creation-et-gestion-du-cluster-kubernetes">Infrastructure as Code (IaC) : création et gestion du cluster Kubernetes</h2>
+<p>L'Infrastructure <strong>as Code (IaC)</strong> est une méthodologie permettant de gérer l'automatisation de votre infrastructure. Tout se trouve dans votre repository Git.</p>
+<p>Certaines grandes entreprises recréent de toutes pièces leur infrastructure chaque semaine. L'automatisation devient gage de sureté. Face à un <em>disaster recovery</em>, vous pourrez plus aisément vous fier à votre IaC.</p>
+<p>Afin de créer et gérer vos clusters Kubernetes, nous vous recommandons de procéder de cette manière.</p>
+<h3 id="lapproche-procedurale">L'approche procédurale</h3>
+<p>Lorsque nous abordons notre infrastructure avec une approche procédurale, cela revient à se dire "Comment mon infrastructure devrait être changée ?"</p>
+<p>C'est une méthode itérative dans laquelle vous allez mettre en place vos différents scripts d'automatisation afin de consolider votre infrastructure.</p>
+<p>L'inconvénient majeur de cette approche est que vous devez continuellement vérifier l'état réel de votre infrastructure. Au fil du temps, cette dernière s'étoffera et vous risquez d'en perdre le contrôle.</p>
+<h3 id="lapproche-declarative">L'approche déclarative</h3>
+<h4 id="les-solutions-pour-lapproche-declarative">Les solutions pour l'approche déclarative</h4>
+<p>L'approche déclarative consiste à définir l'infrastructure souhaitée (propriétés, ressources nécessaires, dépendances...) et l'outil IaC se chargera de la configuration.</p>
+<p>Les principaux outils fournis par défaut par les Cloud providers sont :</p>
+<ul>
+<li><strong>ARM / Bicep</strong> pour Azure</li>
+<li><strong>CloudFormation</strong> pour AWS</li>
+<li><strong>Cloud Deployment Manager</strong> pour GCP</li>
+<li>Etc.</li>
+</ul>
+<p>Une autre alternative permet de décrire votre infrastructure pour les Cloud providers connus du marché : il s'agit de <strong>Terraform</strong>. A l'aide du même langage (HCL, pour Hashicorp Configuration Language), on applique le même workflow, quelle que soit la cible :</p>
+<ul>
+<li><strong>Write</strong> : décrire l'infrastructure souhaitée ;</li>
+<li><strong>Plan</strong> : vérifier les changements avant son application ;</li>
+<li><strong>Apply</strong> : provisionnement et mise à jour de l'infrastructure.</li>
+</ul>
+<p>On peut utiliser Terraform pour les cas suivants :</p>
+<ul>
+<li>Dans le cadre du <strong>multicloud</strong>: clusters Kubernetes sur deux Cloud providers différents par exemple ;</li>
+<li>Si vous avez un doute sur la cible et qu'un changement est envisagé dans un futur proche  : passage d'un Cloud provider vers un autre par exemple.</li>
+</ul>
+<p>Voici les principaux providers disponibles pour Terraform :</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Schema_provider_terraform.png"><img alt="Cloud Providers Terraform" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Schema_provider_terraform-300x140.png" /></a></p>
+<p>Quel que soit votre choix, les fichiers de configuration devront être stockés dans un système de contrôle de source tel que Git.</p>
+<h4 id="le-repository-reflet-de-notre-infrastructure">Le repository, reflet de notre infrastructure</h4>
+<p>Le fait de décrire l'infrastructure de manière déclarative dans votre repository permet d'avoir une seule source pour la création et la gestion des clusters Kubernetes. En effet, on évite ainsi d'interagir directement avec l'infrastructure pour toute modification de configurations tout en conservant un historique des modifications. Ce dernier pourrait même devenir source de documentation.</p>
+<h4 id="partir-dun-modele-pour-creer-dautres-environnements">Partir d'un modèle pour créer d'autres environnements</h4>
+<p>A partir d'un modèle d'une infrastructure existante, il sera possible de créer d'autres environnements :</p>
+<ul>
+<li>Pour avoir d'<strong>autres environnements</strong> <strong>de test / recette </strong>;</li>
+<li>Sur une autre <strong>zone géographique</strong>;</li>
+<li>Pour <strong>préparer une montée de version de Kubernetes</strong> avec les applications existantes et mesurer les impacts.</li>
+</ul>
+<h3 id="lapproche-gitops">L'approche GitOps</h3>
+<p>Inventé récemment par Alexis Richardson de Weaveworks, GitOps est un modèle qui a beaucoup gagné en popularité. L'Infrastructure as Code nous accompagne depuis quelques années maintenant, depuis l'invention des Clouds publics où chaque ressource peut être définie comme du code. GitOps est une extension logique de cette idée aux applications exécutées dans Kubernetes. Le mécanisme de déploiement de Kubernetes nous permet de décrire complètement nos applications sous forme de manifestes que nous pouvons versionner dans Git.</p>
+<p>La méthodologie GitOps va un peu plus loin sur l'approche déclarative. Les repositories Git deviennent la seule source de vérité. Toute modification manuelle de l'infra via l'interface utilisateur ou ligne de commande est proscrite.</p>
+<p>Le repository Git de l'infrastructure doit être dissocié des repository applicatifs. Ils ont en effet chacun leur propre cycle de vie.</p>
+<p>La CI va se dérouler sur le repository de l'application. La CI lancera :</p>
+<ul>
+<li>Le build applicatif ;</li>
+<li>Les tests unitaires ;</li>
+<li>Le build de l'image de l'application ;</li>
+<li>Et enfin, le push dans un registry.</li>
+</ul>
+<p>Il existe 2 modes GitOps :</p>
+<ul>
+<li>Le mode Push</li>
+<li>Le mode Pull</li>
+</ul>
+<p>Le mode <strong>Pull</strong> est l'approche la plus intuitive dans l'écosystème Kubernetes. Nous allons donc nous y intéresser de plus près :</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-2.png"><img alt="Kubernetes mode pull schéma" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-2-300x65.png" /></a></p>
+<p>Les pipelines CI/CD traditionnels sont déclenchés par un événement externe, par exemple lorsqu'un nouveau code est poussé vers le repository de votre application. Avec l'approche de déploiement basée sur le Pull, une nouvelle notion est introduite : l'opérateur. Ce dernier reprend la responsabilité du pipeline en scrutant le repository de votre environnement. Il compare en permanence l'état souhaité avec l'état réel de l'infrastructure. Pour chaque différence constatée, l'opérateur met à jour l'infrastructure pour qu'elle corresponde au repository de votre environnement. L'opérateur peut aussi surveiller vos registries d'images afin de trouver de nouvelles versions d'images à déployer.</p>
+<p>Argo CD, Flux et Jenkins X sont des outils de CD nouvelle génération adoptant la stratégie GitOps Pull.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas-12.png"><img alt="Adopt trial assess Pull CICD" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas-12-300x194.png" /></a></p>
+<p>Sur le plan architectural, GitOps nous permettra de séparer le flux d'intégration continue (CI) d'une application du processus de déploiement, car le processus de déploiement démarrera en fonction des modifications apportées à un dépôt GitOps, et non dans le cadre du processus CI.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-4.png"><img alt="Continuous integration Kubernetes GitOps" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-4-300x127.png" /></a></p>
+<p>Nous allons maintenant aborder le sujet de la CI pour rentrer dans le vif du sujet concernant nos applications à conteneuriser.</p>
+<h2 id="cote-applicatif">Côté applicatif</h2>
+<h3 id="la-ci">La CI</h3>
+<h4 id="une-ci-standard">Une CI Standard</h4>
+<p>Les étapes incontournables d'une CI sont :</p>
+<ul>
+<li>Le build ;</li>
+<li>Les tests unitaires ;</li>
+<li>Une publication de votre build dans un artefact.</li>
+</ul>
+<p>Dans le cadre d'une intégration continue pour vos applications qui tourneront par la suite dans le cluster AKS, nul besoin de changer vos habitudes en matière de CI.</p>
+<p>Le seul changement à apporter est de publier en fin de CI vos images Docker dans vos registries privés.</p>
+<h4 id="les-images-de-conteneur">Les images de conteneur</h4>
+<p>Préparer son image ne se résume pas seulement à conteneuriser son application.</p>
+<p>Il faut prendre en considération plusieurs éléments :</p>
+<ul>
+<li>Comment versionner mon application ?</li>
+<li>L'image source est-elle sécurisée ?</li>
+<li>Mon application génère-t-elle des logs ?</li>
+<li>Ces logs peuvent-ils me permettre d'avoir des KPIs métiers et de performance ?</li>
+<li>Mon application dispose-t-elle d'un healthcheck permettant de connaître son statut ?</li>
+</ul>
+<h5 id="segregation-des-environnements-de-production-et-de-developpement">Ségrégation des environnements de production et de développement</h5>
+<p>Au fil du temps, suite aux nombreuses features développées par vos équipes, vous vous retrouverez avec une multitude d'image taguées sur vos registries. Des tags très souvent inutiles et qui vous donnent l'impression de nager dans un nuage de tags.</p>
+<p>Il devient donc utile de séparer vos travaux de développement avec ce que vous souhaitez réellement déployer en production.</p>
+<blockquote>
+<p><strong>Avoir un registry de développement séparé de la production permet de gagner en clarté.</strong></p>
+</blockquote>
+<p>Vous pouvez très bien pousser vos tags de développement depuis vos branches de feature et <em>develop</em>, et utiliser la branche <em>master</em> pour pousser vos tags de production.</p>
+<h5 id="porter-le-versionning-sur-vos-branches">Porter le versionning sur vos branches</h5>
+<p>En fonction de la taille de vos équipes, vous devez faire un choix sur l'adoption d'un flow Git : Git Flow, Github Flow, master only.</p>
+<p>Et afin d'automatiser le versionning de votre application, vous pouvez tout simplement laisser cette responsabilité à vos branches.</p>
+<p>Certains outils tels que Git Version permettent de mettre en place assez rapidement le versionning au sein de vos branches.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-5.png"><img alt="automatic semantic versionning GitVersion" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-5-300x88.png" /></a></p>
+<p>Il suffit alors d'utiliser la version de votre branche pour taguer vos images.</p>
+<p>Pour le déploiement de vos applications, nous vous recommandons ne pas utiliser le tag <em>latest</em>. Il est préférable de toujours indiquer un tag de version, afin de garder une trace des déploiements pour pouvoir investiguer en cas de problème.</p>
+<h5 id="les-images-utilisees-sont-elles-securisees">Les images utilisées sont-elles sécurisées ?</h5>
+<p>Nous avons tendance à rechercher l'image la plus petite, la moins consommatrice, au détriment de la sécurité.</p>
+<p>Pour se prémunir de ces vulnérabilités, mieux vaut intégrer dans votre registry un outil de scan.</p>
+<p>Très complet, le registry Harbor permet d'ajouter via un plugin des outils de scan comme Clair (open source).</p>
+<h5 id="ne-pas-oublier-le-monitoring">Ne pas oublier le monitoring</h5>
+<blockquote>
+<p><strong>Le monitoring est la clé du succès !</strong></p>
+</blockquote>
+<p>Lorsque vous développez vos applications, ne soyez pas avare en log. Mettez en place des logs afin de collecter des informations de performance ainsi que des KPIs métiers pertinents.</p>
+<p>Ces customs metrics pourront alors remonter dans vos dashboards métiers et techniques.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Image5.png"><img alt="monitoring CICD dashboards métiers et techniques" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Image5-300x187.png" /></a></p>
+<h3 id="la-cd">La CD</h3>
+<p>Aujourd'hui, l'un des plus grands défis du développement d'applications Cloud natives est d'accélérer le nombre de vos déploiements. Avec une approche de microservices, les développeurs travaillent déjà avec et conçoivent des applications entièrement modulaires qui permettent à plusieurs équipes d'écrire et de déployer des modifications simultanément sur une application.</p>
+<p>Des déploiements plus courts et plus fréquents offrent plusieurs avantages :</p>
+<ul>
+<li>Une réduction du time to market ;</li>
+<li>Les clients peuvent profiter des fonctionnalités plus rapidement ;</li>
+<li>Des feedbacks clients plus rapides.</li>
+</ul>
+<h4 id="comment-deployer-sur-kubernetes">Comment déployer sur Kubernetes ?</h4>
+<p>Kubectl est l'interface en ligne de commande (CLI) de Kubernetes. Il permet de déployer toutes sortes d'objets Kubernetes dans vos clusters.</p>
+<p>Le format adopté par Kubernetes est le YAML (Yet Another Markup Language).</p>
+<p>A travers ces commandes <em>kubectl</em>, vous pourrez transmettre ces manifestes afin de déployer au mieux vos applications.</p>
+<h4 id="ce-quil-ne-faut-pas-oublier-pour-vos-containers">Ce qu'il ne faut pas oublier pour vos containers</h4>
+<p>Gardez bien à l'esprit que vos applications sont déployées dans un environnement Kubernetes.</p>
+<p>Vous devez prendre en compte un certain nombre de point clés.</p>
+<h5 id="limitation-cpu-memoire">Limitation CPU / Mémoire</h5>
+<p>Certaines mesures devront être prises en considération avant d'embarquer votre application dans un cluster.</p>
+<p>Effectuez des <strong>load tests</strong> afin de connaître les <strong>limitations de votre application</strong>. Ils vous permettront de définir :</p>
+<ul>
+<li>Sa consommation mémoire ;</li>
+<li>Son utilisation CPU (Central Processing Unit) ;</li>
+<li>Le nombre de requêtes par seconde qu'elle peut gérer.</li>
+</ul>
+<p>Ces informations vont être capitales par la suite pour définir la haute disponibilité de vos applications.</p>
+<p>Définir vos limitations vous permettra d'utiliser efficacement vos Horizontal Pod Autoscaler (HPA).</p>
+<p>Si votre cluster dispose d'un autoscaling, cela sera d'autant plus bénéfique pour l'hyper-scalabilité de vos applications. Sans limitation définie, l'autoscaling devient inutile.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Image6.png"><img alt="Schéma cluster AKS" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Image6-300x124.png" /></a><em>Source : Documentation Microsoft</em></p>
+<h5 id="healthcheck">HealthCheck</h5>
+<p>Tout Load Balancer a besoin de scruter la santé des applications avant de router dessus. Kubernetes ne déroge pas à la règle.</p>
+<p>Prenez le temps de mettre en place un HealthCheck dans votre application afin que votre cluster puisse interroger un pod sain.</p>
+<p>Nous avons pu voir à de nombreuses reprises des applications sans monitoring ni HealthCheck. Le problème récurrent est que votre service (ingress) redirige vers des pods en erreur (applicative) et le diagnostic devient compliqué.</p>
+<p>Une fois le Healthcheck mis en place sur vos applications, il faut aussi prendre le temps de <strong>configurer les probes</strong> de vos containers.</p>
+<p>Il existe 3 types de sondes :</p>
+<ul>
+<li><strong>Startup</strong> probe : vérifie le démarrage initial de vos applications. Elle n'est utilisée qu'une seule fois.</li>
+<li><strong>Readiness</strong> probe : vérifie si votre application peut répondre au trafic. Elle est utilisée tout le long de la vie de votre conteneur. En cas d'échec, Kubernetes arrêtera d'acheminer le trafic vers votre application (et essayera plus tard).</li>
+<li><strong>Liveness</strong> probe : vérifie si votre application est en bon état de fonctionnement. Elle est utilisée tout le long de la vie de votre conteneur. En cas d'échec, Kubernetes supposera que votre application est bloquée et la redémarrera.</li>
+</ul>
+<h4 id="strategie-de-deploiements">Stratégie de déploiements</h4>
+<p>Il existe plusieurs types de stratégies de déploiement dont vous pouvez tirer parti en fonction de votre objectif.</p>
+<h5 id="strategie-rolling-update">Stratégie Rolling Update</h5>
+<p>Le Rolling Update -- ou déploiement progressif -- est le <strong>déploiement standard par défaut</strong> sur Kubernetes. Il fonctionne lentement, un par un, en remplaçant les pods de la version précédente de votre application par des pods de la nouvelle version, sans aucun temps d'arrêt du cluster, permettant aussi un rollback automatique en cas d'échec.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-7.png"><img alt="rolling update sur Kubernetes K8S" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-7-300x174.png" /></a></p>
+<h5 id="strategie-blue-green">Stratégie Blue-Green</h5>
+<p>Dans une stratégie de déploiement Blue-Green, deux versions de votre application coexistent :</p>
+<ul>
+<li>L'ancienne version de l'application (Blue), qui est celle vue par les utilisateurs ;</li>
+<li>La nouvelle version (Green), qui est en cours de développement.</li>
+</ul>
+<p>Une fois la nouvelle version testée et validée pour la publication, le service passe à la version Green avec l'ancienne version Blue qui devient le slot de la future release.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-8.png"><img alt="Développement Blue Green CICD" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-8-300x146.png" /></a></p>
+<h5 id="strategie-canary-release">Stratégie Canary Release</h5>
+<p>Le Canary est utile lorsque vous souhaitez tester de nouvelles fonctionnalités, généralement sur le backend de votre application, avec précaution.</p>
+<p>Deux applications coexistent alors dans votre infrastructure :</p>
+<ul>
+<li>L'application actuelle ayant la quasi-totalité du trafic ;</li>
+<li>L'application disposant de la nouvelle feature que nous souhaitons éprouver avec un trafic régulé.</li>
+</ul>
+<p>Vos clients et développeurs pourrons alors tester ces nouvelles fonctionnalités.</p>
+<p>Lorsqu'aucune erreur n'est signalée sur les plans technique et fonctionnel, la nouvelle version peut progressivement se déployer sur le reste de l'infrastructure en prenant la place de l'ancienne.</p>
+<p>Sa mise en place est plus facile avec un Service Mesh tel qu'Istio.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Image7.png"><img alt="Canary Release service Mersh Istio" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Image7-300x120.png" /></a><em>Source : documentation Istio</em></p>
+<h5 id="strategie-dab-testing">Stratégie d'A/B Testing</h5>
+<p>L'A/B Testing rejoint beaucoup le concept de Canary et est plus destiné aux fonctionnalités front-end.</p>
+<p>Plutôt que de lancer une nouvelle fonctionnalité pour tous les utilisateurs, vous pouvez la proposer à un petit nombre d'entre eux. Les utilisateurs ne savent généralement pas qu'ils sont utilisés comme testeurs pour la nouvelle fonctionnalité.</p>
+<p>A l'aide de métriques/KPIs, vous pourrez alors observer l'efficacité de votre nouvelle interface utilisateur : permet-elle d'avoir une belle conversion business ? Est-elle trop déroutante pour vos utilisateurs ?</p>
+<p>Une fois de plus, sa mise en pratique est plus aisée via un Service Mesh dans vos clusters.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Image8.png"><img alt="Cluster K8S service mersh istio K8Sh" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Image8-300x101.png" /></a></p>
+<h5 id="vue-densemble-des-strategies-de-deploiement">Vue d'ensemble des stratégies de déploiement</h5>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Tableau.jpg"><img alt="CICD tableau des stratégies de deploiement" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Tableau-300x68.jpg" /></a></p>
+<h3 id="industrialiser-ses-packages-avec-helm">Industrialiser ses packages avec Helm</h3>
+<p>Dans Kubernetes, la configuration de vos services/applications se fait généralement via des fichiers YAML. Quand on a une seule application en ligne, cela reste assez simple mais dès qu'on a plusieurs environnements, applications et services, on se retrouve très vite submergé de fichiers plus ou moins semblables.</p>
+<p>C'est là qu' intervient Helm !</p>
+<p>Helm est le <strong>package manager soutenu et recommandé par Kubernetes</strong>. Il est aussi l'un des seuls sur le marché, son unique concurrent, KPM de CoreOS, n'étant plus maintenu depuis juillet 2017.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas-11.png"><img alt="Kubernetes package Helm" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas-11-300x119.png" /></a></p>
+<h4 id="pourquoi-helm">Pourquoi Helm ?</h4>
+<p>Toutes les solutions de création de modèles pour Kubernetes souffrent du même problème : Kubernetes ne connaît qu'un ensemble de manifestes et rien de plus. La notion d'application est perdue et ne peut être recréée qu'en ayant les fichiers sources d'origine à portée de main.</p>
+<p>Helm, quant à lui, connaît l'ensemble de l'application et stocke les informations spécifiques à l'application dans le cluster lui-même. Il peut alors suivre les ressources de l'application suite au déploiement. La différence est subtile mais importante.</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-10.png"><img alt="Kubernetes Helm K8S" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-10-300x101.png" /></a></p>
+<p>Il est inutile de comparer Helm aux outils de création de modèles tels que Kustomize / k8compt / kdeploy : Helm est bien plus qu'une solution de création de modèles.</p>
+<p>Ce package manager présente d'autres avantages :</p>
+<ul>
+<li>Moteur de templating permettant de factoriser les manifestes YAML de toutes vos applications ;</li>
+<li>Organisation et unification de vos templates avec une arborescence cohérente ;</li>
+<li>Mise à disposition de vos charts sur des dépôts publics ou privés ;</li>
+<li>Update et Rollbacks des révisions de vos applications sans rupture de service ;</li>
+<li>Système de dépendance avec d'autres charts (encore plus de factorisation) ;</li>
+<li>Test via le CLI pour vérifier les connectivités.</li>
+</ul>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Image9.png"><img alt="rollbacks automatiques Helm K8S" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Image9-300x54.png" /></a><em>Illustration de rollbacks automatiques basés sur vos métriques afin d'éviter certaines catastrophes.</em></p>
+<p>Vous allez pouvoir unifier et simplifier vos centaines de manifestes YAML Kubernetes en quelques charts. Terminé les duplications de configuration !</p>
+<h3 id="comment-integrer-helm-dans-vos-pipelines-cicd">Comment Intégrer Helm dans vos pipelines CI/CD ?</h3>
+<p>L'intégration de vos packages Helm dans votre CI demande peu de modifications de votre CI.</p>
+<p>Voici le schéma d'une approche classique :</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/Image10.png"><img alt="Intégration package Helm dans le CI approche classique" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Image10-300x154.png" /></a></p>
+<p>Et celui d'une approche GitOps en mode Pull :</p>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-12.png"><img alt="Approche en mode Pull " src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-12-300x110.png" /></a></p>
+<p>Dans les 2 cas :</p>
+<ul>
+<li>Vous devez stocker vos charts dans vos repository Helm lors de la CI ;</li>
+<li>Vous pourrez alors en disposer lors de votre CD.</li>
+</ul>
+<h2 id="integrer-la-securite-dans-vos-pipelines-cicd">Intégrer la sécurité dans vos pipelines CI/CD</h2>
+<p>Une fois vos pipelines CI/CD mises en place et fonctionnelles, vous avez la possibilité d'ajouter des tâches supplémentaires et de faire certaines vérifications avant d'exécuter chaque tâche de votre pipeline. Cela pourra créer des rapports, bloquer la pipeline, vous avertir en cas de problème...</p>
+<p>La plupart du temps, vous allez utiliser des outils open-source ou des produits éditeurs.</p>
+<p>Vous pouvez par exemple :</p>
+<ul>
+<li>Vérifier la présence de données sensibles (secrets, respect des bonnes pratiques de développement) ;</li>
+<li>Analyser le code source (applicatif, IaC) ;</li>
+<li>Rechercher les vulnérabilités sur les dépendances projets ;</li>
+<li>Lancer des tests de sécurité sur les images de conteneurs ;</li>
+<li>Vérifier l'intégrité de votre image de conteneur.</li>
+</ul>
+<p><a href="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-11.png"><img alt="sécurité pipeline CICD K8S" src="https://blog.cellenza.com/wp-content/uploads/2021/06/schemas_Plan-de-travail-1-copie-11-300x80.png" /></a></p>
+<h2 id="lessentiel-a-retenir">L'essentiel à retenir</h2>
+<p>Nous avons pu voir ensemble les éléments clés qu'il ne faut surtout pas mettre de côté lors de la création de votre infrastructure ainsi que l'importance de la mise en place d'une bonne CI/CD.</p>
+<p>Dans le cadre d'une modernisation de vos applications Cloud native, il est judicieux de mettre en place une <strong>automatisation performante</strong> afin de <strong>réduire le time to market.</strong></p>
+<p>Sur la partie infrastructure, partir d'un template est bénéfique afin de suivre l'évolution des clusters Kubernetes mais aussi de le réutiliser pour différents cas d'usage, comme déployer d'autres environnements et la mise à jour de Kubernetes dans le cadre du Blue/Green. <strong>Nous recommandons fortement l'IaC.</strong></p>
+<p>L'écosystème de Kubernetes est en perpétuel mouvement. Il n'est donc pas aisé de se retrouver avec cette multitude d'outils proposés par la toile. Les montées de version de vos clusters sont elles aussi conséquentes !</p>
+<p>Il est donc indispensable d'être à l'écoute des technos et de vous adapter en continu. Et aussi d'avoir une rigueur dans la mise en place de vos configurations et sans cesse optimiser vos processus : configuration des ressources, policy, <a href="https://blog.cellenza.com/conteneurs/securiser-son-service-kubernetes/">sécurité</a>, <a href="https://blog.cellenza.com/conteneurs/comment-integrer-kubernetes-dans-sa-strategie-de-monitoring/">monitoring</a>...</p>
+<h2 id="pour-aller-plus-loin-sur-kubernetes">Pour aller plus loin sur Kubernetes</h2>
+<p>Pour mettre en pratique tout ce que vous avez appris au cours du Mois du Conteneur, Cellenza vous propose de voir le replay du webinaire de clôture. Pendant une heure, Benoît Sautière (Senior Technical Officer chez Cellenza), Stanislas Quastana (Cloud Solution Architect chez Microsoft) et Louis-Guillaume Morand (Cloud Solution Architect chez Microsoft) vous présentent les différentes étapes à suivre pour adopter Kubernetes dans votre entreprise !</p>
+<p>Retrouvez également tous les articles du Mois du Conteneur :</p>
+<ul>
+<li><a href="https://blog.cellenza.com/conteneurs/un-mois-pour-tout-savoir-sur-kubernetes/">Un mois pour tout savoir sur Kubernetes</a></li>
+<li><a href="https://blog.cellenza.com/conteneurs/kubernetes-quel-interet-pour-repondre-aux-besoins-business/">Kubernetes : quel intérêt pour répondre aux enjeux Business ?</a></li>
+<li><a href="https://blog.cellenza.com/conteneurs/kubernetes-au-service-de-votre-strategie-applicative/">Kubernetes au service de votre stratégie applicative</a></li>
+<li><a href="https://blog.cellenza.com/conteneurs/kubernetes-un-ecosysteme-a-construire/">Kubernetes : un écosystème à construire</a></li>
+<li><a href="https://blog.cellenza.com/conteneurs/mettre-en-place-sa-strategie-de-migration-vers-kubernetes/">Mettre en place sa stratégie de migration vers Kubernetes</a></li>
+<li><a href="https://blog.cellenza.com/conteneurs/comment-integrer-kubernetes-dans-sa-strategie-de-monitoring/">Comment intégrer Kubernetes dans sa stratégie de monitoring ?</a></li>
+<li><a href="https://blog.cellenza.com/conteneurs/securiser-son-service-kubernetes/">Sécuriser son service Kubernetes</a></li>
+</ul>
+<p>Tous ces articles sont compilés dans un <a href="https://click.cellenza.com/telechargement-livre-blanc-preparer-adoption-Kubernetes">livre blanc téléchargeable gratuitement</a>.</p>
+<p><a href="https://click.cellenza.com/telechargement-livre-blanc-preparer-adoption-Kubernetes"><img alt="Télécharger livre blanc conteneur" src="https://blog.cellenza.com/wp-content/uploads/2021/06/Visuel-04-1-300x45.jpg" /></a></p>
+<p><strong>Article rédigé par <a href="https://www.linkedin.com/in/mustapha-ferhaoui-56a68048/">Mustapha Ferhaoui</a> et <a href="https://www.linkedin.com/in/jeromethin/">Jérôme Thin</a></strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 Agent-Swyth
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "header.autohide"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a7c05c9e.min.js"></script>
+      
+    
+  </body>
+</html>
